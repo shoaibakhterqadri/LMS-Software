@@ -14,7 +14,11 @@ app.use(bodyParser.json())
 async function connectToDatabase()
 {
     try {
-        await mongoose.connect('mongodb+srv://shoaibakhter:shoaibakhter-lms-software@cluster0.78eq5ub.mongodb.net/');
+        await mongoose.connect('mongodb+srv://shoaibakhter:shoaibakhter-lms-software@cluster0.78eq5ub.mongodb.net/',{
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 30000, // 30 seconds
+          });
         console.log('Connected to the database');
     } catch (error) {
         console.error('Error in connection', error);
@@ -22,8 +26,11 @@ async function connectToDatabase()
 }
 connectToDatabase();
 
-app.post('/signup', userController.signup)
-app.post('/signin', userController.signin)
+app.post('/signup', userController.signup);
+app.post('/signin', userController.signin);
+app.post('/send-otp', userController.sendotp);
+app.post('/submit-otp', userController.submitotp);
+
 
 
 app.listen(port,()=>{

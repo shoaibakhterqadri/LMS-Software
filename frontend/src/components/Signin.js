@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 function Signin() {
 
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
-
+    const navigate=useNavigate();
     const ChangeEmail=(e)=>{
         setEmail(e.target.value);
     }
@@ -21,15 +21,17 @@ function Signin() {
         axios.post('http://localhost:5000/signin',
         {email:email,password:password})
         .then((res)=>{
-            console.log("Sign in successfully");
+
             if(res.data.code===500){
                 alert("Invalid Email or password");
             }
             if(res.data.code===404){
-                alert("Invalid Email or password");
+                alert("Password Wrong");
             }
             if(res.data.code===200){
-                
+                navigate('/');
+                localStorage.setItem("TOKEN",res.data.token);
+                localStorage.setItem("EMAIL",res.data.email);
             }
         })
         .catch((err)=>{
@@ -47,6 +49,8 @@ function Signin() {
         <input type='password' name='password' id='password' value={password} onChange={ChangePassword} /><br/>
         <button  onClick={handleSubmit}>Submit</button>
         <Link to={'/signup'}>Sign Up</Link>
+        <Link to={'/forget-password'}>Forget Password</Link>
+
     </form>
     </>
   )
